@@ -1,6 +1,6 @@
 <!-- resources/views/auth/student_register.blade.php -->
 
-<form action="{{ route('auth.student_register.submit') }}" method="POST">
+<form action="{{ route('student.store') }}" method="POST">
     @csrf
 
     <!-- Hidden inputs for email and role -->

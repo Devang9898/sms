@@ -42,4 +42,11 @@ class AdminController extends Controller
         // Redirect to the admin dashboard or another page after successful registration
         return redirect()->route('admin.dashboard');
     }
+
+    // Admin dashboard
+    public function dashboard()
+    {
+        // Return the admin dashboard view
+        return view('admin.dashboard');  // Ensure you have a Blade view for the dashboard
+    }
 }

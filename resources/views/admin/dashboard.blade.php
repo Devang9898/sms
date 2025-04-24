@@ -5,4 +5,4 @@
         Guest
     @endif
 !</h2>
-<p>This is your dashboard.</p>
+<p>This is admin dashboard.</p>
