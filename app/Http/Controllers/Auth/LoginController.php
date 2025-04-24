@@ -1,14 +1,40 @@
 <?php
+
+//modified code
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class LoginController extends Controller
 {
-    // Override the authenticated method to redirect based on user role
-    public function authenticated(Request $request, $user)
+    // Show the login form
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    // Handle the login logic using email only
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user) {
+            Auth::login($user); // Logs in the user without password
+            return $this->authenticated($request, $user);
+        }
+
+        return redirect()->back()->withErrors(['email' => 'Email not found.']);
+    }
+
+    // Redirect user based on role
+    protected function authenticated(Request $request, $user)
     {
         if ($user->role == 'admin') {
             return redirect()->route('admin.register');
@@ -16,25 +42,44 @@ class LoginController extends Controller
 
         return redirect()->route('student.register');
     }
-
-    // Show the login form
-    public function showLoginForm()
-    {
-        return view('auth.login');
-    }
-
-    // Handle the login logic
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
-            return $this->authenticated($request, Auth::user());
-        }
-
-        return redirect()->back()->withErrors(['email' => 'Invalid credentials.']);
-    }
 }
+
+// namespace App\Http\Controllers\Auth;
+
+// use App\Http\Controllers\Controller;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Auth;
+
+// class LoginController extends Controller
+// {
+//     // Override the authenticated method to redirect based on user role
+//     public function authenticated(Request $request, $user)
+//     {
+//         if ($user->role == 'admin') {
+//             return redirect()->route('admin.register');
+//         }
+
+//         return redirect()->route('student.register');
+//     }
+
+//     // Show the login form
+//     public function showLoginForm()
+//     {
+//         return view('auth.login');
+//     }
+
+//     // Handle the login logic
+//     public function login(Request $request)
+//     {
+//         $credentials = $request->only('email');
+
+//         if (Auth::attempt($credentials)) {
+//             return $this->authenticated($request, Auth::user());
+//         }
+
+//         return redirect()->back()->withErrors(['email' => 'Invalid credentials.']);
+//     }
+// }
 
 // namespace App\Http\Controllers\Auth;
 
